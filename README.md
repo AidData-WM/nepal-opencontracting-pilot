@@ -1,4 +1,6 @@
-nepal-opencontracting-pilot
-===========================
+Nepal Open Contracting Pilot - Collaborative Repo
+=================================================
 
-A repository for collaboration between YoungInnovations and AidData on a data model for an open contracting pilot in Nepal.
+This repo is for collaboration between Young Innovations and AidData on overlapping features of the on-going pilot efforts around Open Contracting in Nepal. Specifically, this repo contains the data model that is being used (and iterated on!) during initial data collection.
+
+Everything in this repo is an EARLY DRAFT!!!
