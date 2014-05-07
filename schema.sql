@@ -1,55 +1,103 @@
+/* this schema was written as a backend for an OpenOffice Base interface, and so uses the HSQLDB flabour of SQL syntax */
+/* fully capitalized field names are used b/c OpenOffice converts everything to caps automatically for some reason */
+/* http://hsqldb.org/ */
+
+
+
+DROP TABLE IF EXISTS CODEDLOCATION;
+DROP TABLE IF EXISTS CODEDTENDERNOTICE;
+DROP TABLE IF EXISTS TENDERNOTICE;
+DROP TABLE IF EXISTS CODEDSUPPLIER;
+DROP TABLE IF EXISTS AWARD;
+DROP TABLE IF EXISTS CODER;
+
+
 
 CREATE TABLE TenderNotice (
 	ID int IDENTITY,
-	TenderNoticeNumber varchar(200),
-	Status varchar(50),
-	URL varchar(50),
-	ContractNumber varchar(200),
-	Issuer varchar(200),
-	PublicationDate varchar(200),
-	PublishedIn varchar(200),
-	DocumentPurchaseDeadline varchar(200),
-	SubmissionDeadline varchar(200),
-	OpeningDate varchar(200),
-	ContractType varchar(200),
-	ProjectName varchar(500),
-	ProjectNumber varchar(200),
-	ProjectFunder varchar(300),
-	ProjectDescription varchar(1000),
-	ContractName varchar(500),
-	Estimate int,
-	EstimateCurrency varchar(10),
-	CoderName varchar(500),
-	DataSource varchar(500)
-)
-
-CREATE TABLE Location (
-	ID int IDENTITY,
-	TENDER_NOTICE_ID int,
-	RECIPIENT_ID int,
-	ADM1 varchar(200),
-	ADM2 varchar(200),
-	ADM3 varchar(200),
-	ADM4 varchar(200),
-	WARD varchar(200),
-	OTHER_LOCATION varchar(500),
-	OTHER_LOCATION_DESC varchar(500),
-	ACTIVITY_DESC varchar(500)
+	TenderNoticeNumber varchar(2000),
+	Status varchar(2000),
+	URL varchar(2000),
+	ContractDetails varchar(2000),
+	Issuer varchar(2000),
+	PublicationDate varchar(2000),
+	PublishedIn varchar(2000),
+	DocumentPurchaseDeadline varchar(2000),
+	SubmissionDeadline varchar(2000),
+	OpeningDate varchar(2000),
+	ContractName varchar(2000),
+	ContractDescription varchar(2000),
+	CostEstimate numeric,
+	EstimateCurrency varchar(2000),
+	DataSource varchar(2000)
 )
 
 CREATE TABLE Award (
 	ID int IDENTITY,
-	URL varchar(500),
-	ESTIMATE int,
-	ESTIMATE_CURRENCY varchar(10)
+	COST_ESTIMATE numeric,
+	ESTIMATE_CURRENCY varchar(2000),
+	DATA_SOURCE varchar(2000),
+	SCRAPED_SUPPLIER_NAME varchar(2000),
+	SCRAPED_SUPPLIER_LOCATION varchar(2000)
 )
 
-CREATE TABLE Recipient (
+CREATE TABLE Coder (
+	ID int IDENTITY,
+	NAME varchar(2000)
+)
+
+CREATE TABLE CodedTenderNotice (
+	ID int IDENTITY,
+	TENDER_NOTICE_ID int,
+	CODER_ID int,
+	TenderNoticeNumber varchar(2000),
+	ContractNumber varchar(2000),
+	ContractType varchar(2000),
+	ProjectName varchar(2000),
+	ProjectNumber varchar(2000),
+	ProjectFunder varchar(2000),
+	ContractName varchar(2000),
+	ContractDescription varchar(2000),
+	CostEstimate numeric,
+	EstimateCurrency varchar(2000),
+	DataSource varchar(2000),
+	FOREIGN KEY (TENDER_NOTICE_ID) REFERENCES TenderNotice (ID),
+	FOREIGN KEY (CODER_ID) REFERENCES Coder(ID)
+
+)
+
+CREATE TABLE CodedLocation (
+	ID int IDENTITY,
+	CODED_TENDER_NOTICE_ID int,
+	ADM1 varchar(2000),
+	ADM2 varchar(2000),
+	ADM3 varchar(2000),
+	ADM4 varchar(2000),
+	WARD varchar(2000),
+	OTHER_LOCATION varchar(2000),
+	OTHER_LOCATION_DESC varchar(2000),
+	ACTIVITY_DESC varchar(2000),
+	FOREIGN KEY (CODED_TENDER_NOTICE_ID) REFERENCES CodedTenderNotice (ID)
+)
+
+
+CREATE TABLE CodedSupplier (
 	ID int IDENTITY,
 	AWARD_ID int,
-	NAME varchar(2000),
-	CODE varchar (2000),
-	LOCATION varchar (2000),
-	CODE_SOURCE varchar(2000),
-	COUNTRY varchar(2000)
+	CODER_ID int,
+	SUPPLIER_NAME varchar(2000),
+	SUPPLIER_REGISTRATION_CODE varchar (2000),
+	SUPPLIER_REGISTRATION_CODE_SOURCE varchar(2000),
+	SUPPLIER_COUNTRY varchar(2000),
+	ADM1 varchar(2000),
+	ADM2 varchar(2000),
+	ADM3 varchar(2000),
+	ADM4 varchar(2000),
+	WARD varchar(2000),
+	OTHER_LOCATION varchar(2000),
+	OTHER_LOCATION_DESC varchar(2000),
+	FOREIGN KEY (AWARD_ID) REFERENCES Award (ID),
+	FOREIGN KEY (CODER_ID) REFERENCES Coder(ID)
 )
+
+
